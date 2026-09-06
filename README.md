@@ -4,9 +4,9 @@
 
 ## Current public release target
 
-**MathParser 2.0.5.7 — Windows x64**
+**MathParser 2.0.7.139 — Windows x64**
 
-The first public distribution is planned as a **portable binary package**. This repository is a distribution/documentation repository and does **not** contain the MathParser source code.
+The first public distribution is being prepared as a **portable binary package**. This repository is a distribution/documentation repository and does **not** contain the MathParser source code.
 
 ## Main capabilities
 
@@ -26,15 +26,24 @@ The first public distribution is planned as a **portable binary package**. This 
 - project/workspace support;
 - scientific HTML/KaTeX presentation.
 
+## 2.0.7.139 highlights
+
+- consolidated high-performance scientific/document rendering path;
+- restored canonical mathematical formatting for specialized scientific operations;
+- Field visualization infrastructure for scalar and residual results in 1D, 2D and 3D;
+- unified automatic Field plot dispatch with optional constraint overlays;
+- synchronized Portuguese/English offline Help;
+- release/version consistency checks for the executable and runtime package.
+
 ## Download
 
-Use the **Releases** section of this repository to download the current Windows x64 portable package.
+When the public package is released, use the **Releases** section of this repository to download the Windows x64 portable package.
 
-> The executable packages are distributed as release assets. Source code is not published in this repository.
+> Executable packages are distributed as release assets. Source code is not published in this repository.
 
 ## Quick start
 
-1. Download the latest `MathParser-<version>-Windows-x64-Portable.zip` from Releases.
+1. Download `MathParser-2.0.7.139-Windows-x64-Portable.zip` from Releases.
 2. Extract the entire ZIP to a writable folder.
 3. Run `mathparser_gui.exe`.
 4. Keep the package folder intact; Help, themes, extensions and offline assets are loaded from that folder.
