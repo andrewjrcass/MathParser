@@ -13,7 +13,8 @@ MathParser is a compact scientific and engineering calculation environment writt
 - vectors, matrices, complex numbers, derivatives, integrals, sums/products and numerical methods;
 - structural/FEM, geotechnical, hydraulic, thermal, electrical and experimental-statistics extensions;
 - offline Help in Portuguese and English;
-- portable Windows x64 runtime with offline KaTeX/Plotly assets.
+- portable Windows x64 runtime with offline KaTeX/Plotly assets;
+- curated native `examples/` directory with 205 `.mps` examples plus supporting libraries, groups, images and extension manifests.
 
 ## Validation
 
@@ -24,7 +25,8 @@ The sealed 2.0.7.139 baseline completed the maintained canonical and focused reg
 - all three executables are PE32+ x64;
 - `mathparser_gui.exe` is Windows GUI subsystem; console executables are console subsystem;
 - public package contains no Pascal/Lazarus/Python source or nested development archives;
-- offline PT/EN Help and required runtime assets are present.
+- offline PT/EN Help and required runtime assets are present;
+- native examples are included while Python bridge examples and internal Integration regression artifacts are excluded.
 
 ## Package
 
@@ -32,9 +34,9 @@ The sealed 2.0.7.139 baseline completed the maintained canonical and focused reg
 
 SHA-256:
 
-`8066f2ad8428eaac5ede15013dadbb482040ca5843a337398d5d5001fbf3291d`
+`09130c75cdb4f25a6cbb4ae7d0cc299c86a8f109ba5260e75e524bb86825baa4`
 
-Extract the whole ZIP to a writable folder and run `mathparser_gui.exe`. Keep the directory structure intact because offline Help, themes, extensions and rendering assets are loaded relative to the application folder.
+Extract the whole ZIP to a writable folder and run `mathparser_gui.exe`. Keep the directory structure intact because offline Help, themes, extensions, examples and rendering assets are loaded relative to the application folder.
 
 Included executables:
 
@@ -42,16 +44,17 @@ Included executables:
 - `console_app.exe`
 - `console_core.exe`
 
-## Documentation
+## Documentation and examples
 
 - `README.md` — project overview and quick start;
 - `MANUAL.md` — manual entry point;
 - `help/pt/index.html` — complete Portuguese offline Help;
 - `help/en/index.html` — complete English offline Help;
-- `ROADMAP.md` — public development direction.
+- `ROADMAP.md` — public development direction;
+- `examples/` — native MathParser examples and supporting files.
 
 ## Distribution note
 
 This GitHub repository is for public distribution and documentation. MathParser source code is not included in the repository or release package.
 
-The public portable profile intentionally excludes internal development files and the external Python bridge source.
+The public portable profile intentionally excludes internal development files and the external Python bridge source/examples.
