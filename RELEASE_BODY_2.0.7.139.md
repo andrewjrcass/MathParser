@@ -1,6 +1,6 @@
 # MathParser 2.0.7.139
 
-This is the first public Windows x64 portable distribution candidate for the current MathParser 2.x line.
+First public Windows x64 portable distribution for the current MathParser 2.x line.
 
 MathParser is a compact scientific and engineering calculation environment written in Free Pascal/Lazarus. It combines physical-unit awareness, dimensional validation, numerical methods, scientific scripting, plotting, engineering-domain extensions and mathematical document rendering in a single desktop application.
 
@@ -15,19 +15,40 @@ MathParser is a compact scientific and engineering calculation environment writt
 - offline Help in Portuguese and English;
 - portable Windows x64 runtime with offline KaTeX/Plotly assets.
 
-## Validation baseline
+## Validation
 
-The sealed 2.0.7.139 development baseline completed the maintained canonical regression suite and focused Field regressions before public packaging. Release packaging is performed from the already built/staged Windows runtime and does not rebuild or modify the scientific source baseline.
+The sealed 2.0.7.139 baseline completed the maintained canonical and focused regression suites before public packaging. The supplied Windows runtime was then audited independently:
+
+- `VERSION` = `2.0.7.139`;
+- `mathparser_gui.exe`, `console_app.exe` and `console_core.exe` contain `2.0.7.139` and do not contain `2.0.7.138`;
+- all three executables are PE32+ x64;
+- `mathparser_gui.exe` is Windows GUI subsystem; console executables are console subsystem;
+- public package contains no Pascal/Lazarus/Python source or nested development archives;
+- offline PT/EN Help and required runtime assets are present.
 
 ## Package
 
-Download:
-
 `MathParser-2.0.7.139-Windows-x64-Portable.zip`
 
-Verify it against the accompanying `SHA256SUMS.txt`.
+SHA-256:
+
+`8066f2ad8428eaac5ede15013dadbb482040ca5843a337398d5d5001fbf3291d`
 
 Extract the whole ZIP to a writable folder and run `mathparser_gui.exe`. Keep the directory structure intact because offline Help, themes, extensions and rendering assets are loaded relative to the application folder.
+
+Included executables:
+
+- `mathparser_gui.exe`
+- `console_app.exe`
+- `console_core.exe`
+
+## Documentation
+
+- `README.md` — project overview and quick start;
+- `MANUAL.md` — manual entry point;
+- `help/pt/index.html` — complete Portuguese offline Help;
+- `help/en/index.html` — complete English offline Help;
+- `ROADMAP.md` — public development direction.
 
 ## Distribution note
 
