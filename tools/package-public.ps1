@@ -77,12 +77,52 @@ foreach ($license in @('assets\katex\LICENSE','assets\plotly\LICENSE')) {
   if (-not (Test-Path -LiteralPath $src)) { throw "Third-party license missing: $src" }
 }
 
-# Public profile intentionally excludes Python bridge/source scripts and all
-# development/source files or nested archives.
 $forbiddenExtensions = @(
-  '.pas','.pp','.inc','.lpi','.lpr','.lfm','.lpk','.py',
+  '.pas','.pp','.inc','.lpi','.lpr','.lfm','.lpk','.py','.pyc',
   '.zip','.7z','.rar','.tar','.gz'
 )
+
+# Public native examples from the sealed workspace. The public profile excludes
+# Python-bridge examples and internal Integration regression artifacts.
+$examplesSrc = Join-Path $Root 'examples'
+if (-not (Test-Path -LiteralPath $examplesSrc)) {
+  throw "Examples directory missing: $examplesSrc"
+}
+$examplesDst = Join-Path $packageDir 'examples'
+New-Item -ItemType Directory -Path $examplesDst -Force | Out-Null
+
+Get-ChildItem -LiteralPath $examplesSrc -Recurse -File | ForEach-Object {
+  $relative = $_.FullName.Substring($examplesSrc.Length).TrimStart('\','/')
+  $parts = $relative -split '[\\/]'
+  $name = $_.Name.ToLowerInvariant()
+
+  if ($parts[0] -in @('python_bridge','Integration')) { return }
+  if ($name -in @('python_demo.py','python_demo.mps','python_demo.mpproj')) { return }
+  if ($_.Extension.ToLowerInvariant() -in $forbiddenExtensions) { return }
+  if ($relative -eq 'README.md') { return }
+
+  $destination = Join-Path $examplesDst $relative
+  New-Item -ItemType Directory -Path (Split-Path -Parent $destination) -Force | Out-Null
+  Copy-Item -LiteralPath $_.FullName -Destination $destination -Force
+}
+
+$examplesReadme = @'
+# MathParser — Examples
+
+This directory contains native examples shipped with MathParser 2.0.7.139.
+
+Open any `.mps` file directly in `mathparser_gui.exe`, or execute it with:
+
+    console_app.exe examples\notebook_demo.mps
+
+The `lib/`, `groups/`, `imageLib/` and `extension_packages/` directories contain support files used by some examples.
+
+Python-bridge examples are intentionally not included in this binary-only public distribution.
+'@
+Set-Content -LiteralPath (Join-Path $examplesDst 'README.md') -Value $examplesReadme -Encoding utf8
+
+# Public profile intentionally excludes Python bridge/source scripts and all
+# development/source files or nested archives.
 $forbidden = Get-ChildItem -LiteralPath $packageDir -Recurse -File | Where-Object {
   $_.Extension.ToLowerInvariant() -in $forbiddenExtensions
 }
