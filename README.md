@@ -6,7 +6,7 @@
 
 **MathParser 2.0.7.139 — Windows x64**
 
-The first public distribution is being prepared as a **portable binary package**. This repository is a distribution/documentation repository and does **not** contain the MathParser source code.
+The first public distribution is being prepared as a **portable binary package**. This repository is a distribution/documentation repository and does **not** contain the MathParser source code. This is an important procedure to void the abusive forknication of this work.
 
 ## Main capabilities
 
