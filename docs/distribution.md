@@ -14,21 +14,23 @@ It must not contain:
 
 ## Release assets
 
-Public binaries should be attached to GitHub Releases rather than committed to the Git history.
+Public binaries are attached to GitHub Releases rather than committed to Git history.
 
-Recommended naming:
+For 2.0.7.139 the public Windows package is named:
 
 ```text
-MathParser-2.0.5.7-Windows-x64-Portable.zip
+MathParser-2.0.7.139-Windows-x64-Portable.zip
 SHA256SUMS.txt
 ```
 
-A Windows installer may be added later after the portable package has been validated on clean systems.
+A Windows installer may be added later after the portable distribution has accumulated clean-system validation.
 
 ## Portable package contract
 
-The package is assembled from the already staged runtime in `build/bin`.
+The package is assembled only from the already built and staged 2.0.7.139 Windows runtime. The public packaging step must not compile or modify the scientific source baseline.
 
-The public packaging step must copy only runtime assets needed by users and must explicitly reject development/source extensions.
+Required user-facing contents include the GUI executable, console executable when distributed, VERSION, locale files, offline runtime assets/themes/extensions, offline Help/manual material, README, ROADMAP and applicable third-party notices/licenses.
 
-The initial public profile excludes the external Python bridge source file.
+The packaging step must explicitly reject development/source extensions and nested source archives. The public profile excludes the external Python bridge source (`*.py`).
+
+Before publication, verify that the executable and staged runtime both identify themselves as `2.0.7.139`, then smoke-test the ZIP after extracting it outside the development tree.

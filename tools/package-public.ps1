@@ -4,9 +4,10 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+$publicRepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 
 if ([string]::IsNullOrWhiteSpace($Root)) {
-  $Root = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+  throw 'Pass -Root pointing to the private sealed MathParser 2.0.7.139 workspace.'
 } else {
   $Root = (Resolve-Path $Root).Path
 }
@@ -15,9 +16,15 @@ $versionFile = Join-Path $Root 'VERSION'
 if (-not (Test-Path -LiteralPath $versionFile)) {
   throw "VERSION not found under MathParser root: $Root"
 }
-
 $version = (Get-Content -LiteralPath $versionFile -Raw).Trim()
+if ($version -ne '2.0.7.139') {
+  throw "Refusing public 2.0.7.139 package from VERSION=$version"
+}
+
 $binaryDir = Join-Path $Root 'build\bin'
+if (-not (Test-Path -LiteralPath $binaryDir)) {
+  throw "Staged Windows runtime not found: $binaryDir"
+}
 
 if ([string]::IsNullOrWhiteSpace($OutputDir)) {
   $OutputDir = Join-Path $Root 'dist-public'
@@ -33,14 +40,14 @@ if (Test-Path -LiteralPath $zipPath) { Remove-Item $zipPath -Force }
 New-Item -ItemType Directory -Path $packageDir -Force | Out-Null
 
 $requiredFiles = @(
-  'eval1.exe',
   'mathparser_gui.exe',
+  'console_app.exe',
+  'console_core.exe',
   'WebView2Loader.dll',
   'locale_en.ini',
   'locale_pt.ini',
   'VERSION'
 )
-
 foreach ($file in $requiredFiles) {
   $src = Join-Path $binaryDir $file
   if (-not (Test-Path -LiteralPath $src)) {
@@ -57,26 +64,39 @@ foreach ($dir in @('assets','themes','extensions','help')) {
   Copy-Item -LiteralPath $src -Destination (Join-Path $packageDir $dir) -Recurse -Force
 }
 
-# Public profile: do NOT copy build/bin/scripts because it contains the
-# external Python bridge source file. Python integration is intentionally
-# unavailable in this first public portable profile.
-
-$examples = Join-Path $Root 'examples'
-if (Test-Path -LiteralPath $examples) {
-  Copy-Item -LiteralPath $examples -Destination (Join-Path $packageDir 'examples') -Recurse -Force
+# Public documentation is sourced only from this public repository.
+foreach ($doc in @('README.md','MANUAL.md','ROADMAP.md')) {
+  $src = Join-Path $publicRepoRoot $doc
+  if (-not (Test-Path -LiteralPath $src)) { throw "Public document missing: $src" }
+  Copy-Item -LiteralPath $src -Destination (Join-Path $packageDir $doc) -Force
 }
 
-# Fail closed if development/source files accidentally enter the package.
+# The runtime already carries the third-party license notices beside KaTeX/Plotly.
+foreach ($license in @('assets\katex\LICENSE','assets\plotly\LICENSE')) {
+  $src = Join-Path $packageDir $license
+  if (-not (Test-Path -LiteralPath $src)) { throw "Third-party license missing: $src" }
+}
+
+# Public profile intentionally excludes Python bridge/source scripts and all
+# development/source files or nested archives.
+$forbiddenExtensions = @(
+  '.pas','.pp','.inc','.lpi','.lpr','.lfm','.lpk','.py',
+  '.zip','.7z','.rar','.tar','.gz'
+)
 $forbidden = Get-ChildItem -LiteralPath $packageDir -Recurse -File | Where-Object {
-  $_.Extension.ToLowerInvariant() -in @('.pas','.pp','.inc','.lpi','.lpr','.lfm','.lpk','.py')
+  $_.Extension.ToLowerInvariant() -in $forbiddenExtensions
 }
 if ($forbidden) {
   $names = ($forbidden | ForEach-Object { $_.FullName }) -join [Environment]::NewLine
   throw "Public package contains forbidden source/development files:`n$names"
 }
 
-Compress-Archive -LiteralPath $packageDir -DestinationPath $zipPath -CompressionLevel Optimal
+$packagedVersion = (Get-Content -LiteralPath (Join-Path $packageDir 'VERSION') -Raw).Trim()
+if ($packagedVersion -ne $version) {
+  throw "Packaged runtime VERSION mismatch: $packagedVersion != $version"
+}
 
+Compress-Archive -LiteralPath $packageDir -DestinationPath $zipPath -CompressionLevel Optimal
 $hash = (Get-FileHash -LiteralPath $zipPath -Algorithm SHA256).Hash.ToLowerInvariant()
 $hashFile = Join-Path $OutputDir 'SHA256SUMS.txt'
 "$hash  $([System.IO.Path]::GetFileName($zipPath))" | Set-Content -LiteralPath $hashFile -Encoding ascii
