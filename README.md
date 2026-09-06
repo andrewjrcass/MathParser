@@ -72,3 +72,5 @@ MathParser is currently distributed as compiled binaries only. The source code i
 ## Status
 
 MathParser is under active development. Public releases may add or refine APIs, engineering modules, rendering and deployment capabilities.
+<img width="1502" height="934" alt="image" src="https://github.com/user-attachments/assets/8a642c37-a7d8-4ab1-b58f-c856e6cb7ef6" />
+
